@@ -6,10 +6,17 @@ interface IRequest {
 }
 
 class ListAllUsersUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  // eslint-disable-next-line prettier/prettier
+  constructor(private usersRepository: IUsersRepository) { }
 
   execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+    const userIsAdmin = this.usersRepository.findById(user_id);
+    if (!userIsAdmin.admin) {
+      const erro = new Error("User does not have admin permission");
+      throw erro;
+    }
+    const users = this.usersRepository.list();
+    return users;
   }
 }
 
